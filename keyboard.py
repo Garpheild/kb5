@@ -95,6 +95,9 @@ def faq_main_keyboard(did_form: bool = False):
            ]
     if not did_form:
         btn.append([KeyboardButton(text='Начать работу с GetFlat')])
+    else:
+        btn.append([KeyboardButton(text='Связаться с GetFlat')])
+
 
     keyboard = ReplyKeyboardMarkup(keyboard=btn, 
                                 resize_keyboard=True, 
@@ -142,6 +145,17 @@ def no_photo_keyboard():
 
 def confirm_keyboard():
     btn = [[KeyboardButton(text='Подтвердить')], [KeyboardButton(text='Отменить')]]
+
+    keyboard = ReplyKeyboardMarkup(keyboard=btn, 
+                                resize_keyboard=True, 
+                                one_time_keyboard=True,
+                                )
+    
+    return keyboard
+
+
+def form_end2():
+    btn = [[KeyboardButton(text='Подробнее об условиях')]]
 
     keyboard = ReplyKeyboardMarkup(keyboard=btn, 
                                 resize_keyboard=True, 

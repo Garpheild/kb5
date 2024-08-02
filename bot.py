@@ -25,7 +25,7 @@ class Text(BaseMiddleware):
             if event.text is not None: curr_buttons.append(event.text)
             db.update_db(event.from_user.id, ('buttons',),  (str(curr_buttons),))
         except Exception as e:
-            print(e)
+            pass
         return await handler(event, data)
     
 
@@ -65,11 +65,6 @@ async def menu(message: Message, state: FSMContext):
     await asyncio.create_task(start_form(message, state))
 
 
-@dp.message(F.text == 'Связаться с GetFlat')
-async def chat(message: Message, state: FSMContext):
-    await message.answer('@wegetflat')
-
-
 @dp.message(F.contact)
 async def contact(message: Message, state: FSMContext, back = False):
     if back:
@@ -85,10 +80,11 @@ async def contact(message: Message, state: FSMContext, back = False):
             try:
                 await bot.send_message(id, text=f'Отправлена заявка: \n{message.from_user.full_name}  @{message.from_user.username} +{message.contact.phone_number}')
             except Exception as e:
-                print(e)       
+                pass     
 
     else:
         await message.answer(incorrect_contact_message)
+
 
 @dp.message(F.text == 'Создать рассылку')
 async def sender(message: Message, state: FSMContext):
@@ -135,11 +131,12 @@ async def sender_yes(message: Message, state: FSMContext):
                 await bot.send_photo(id[0], photo=data['photo'], caption=data['text'])
 
         except Exception as e:
-            print(e)
+            pass
         await asyncio.sleep(1)
 
     await message.answer('Рассылка завершена', reply_markup=contact_keyboard(message.from_user.id))
     await state.clear()
+
 
 @dp.message(Sender.confirm, F.text == 'Отменить')
 async def sender_no(message: Message, state: FSMContext):
@@ -166,7 +163,6 @@ async def show_forms(message: Message):
             await asyncio.sleep(0.5)
     except Exception as e:
         await message.answer(no_applications_message)
-        print(e)
 
 
 @dp.message(F.text == 'Подробнее об условиях')
@@ -276,6 +272,8 @@ async def q(message: Message, state: FSMContext):
     elif message.text == 'Личное пользование':
         await message.answer('В GetFlat вы можете забронировать свою недвижимость для личного проживания в любое время в течение года при условии отсутствия бронирований', reply_markup=faq_keyboard2(form))
 
+    elif message.text == 'Связаться с GetFlat':
+        await message.answer('@wegetflat', reply_markup=faq_keyboard2(form))
 
 @dp.message(Form.start)
 async def start_form(message: Message, state: FSMContext, back = False):
@@ -369,3 +367,7 @@ async def send_photo(message: Message):
         except Exception as e:
             print(e)
 
+
+@dp.message(F.text == 'Связаться с GetFlat')
+async def chat(message: Message, state: FSMContext):
+    await message.answer('@wegetflat', reply_markup=form_end2())
